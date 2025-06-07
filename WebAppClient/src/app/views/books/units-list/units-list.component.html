@@ -1,0 +1,61 @@
+<div class="container-fluid p-0">
+  <!-- Muestra el título del libro -->
+  <h4 *ngIf="book">Unidades de: {{ book.name }}</h4>
+  <div class="row mb-2">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <button class="btn btn-secondary mb-3" (click)="back.emit()">
+        <i class="bi bi-arrow-left"></i> Volver a libros
+      </button>
+      <button class="btn btn-primary" (click)="addUnit.emit()">
+        <i class="bi bi-plus"></i> Agregar unidad
+      </button>
+    </div>
+  </div>
+  <div class="row align-items-center mb-3 g-2">
+    <div class="col-12 col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar unidad..."
+        [(ngModel)]="searchTerm"
+        (input)="filterUnits()"
+      />
+    </div>
+  </div>
+  <div class="table-responsive" style="min-height:320px; max-height:60vh; overflow-x:auto;">
+    <div style="min-width:700px; max-width:100%; height:320px; overflow-y:auto;">
+      <table class="table table-striped table-bordered align-middle mb-0" style="table-layout:fixed; width:100%;">
+        <thead class="table-light">
+          <tr>
+            <th style="width:35%;">Nombre</th>
+            <th style="width:50%;">Descripción</th>
+            <th style="width:15%;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let unit of filteredUnits">
+            <td class="text-truncate" [title]="unit.name">
+              {{ unit.name.length > 100 ? (unit.name | slice:0:100) + '...' : unit.name }}
+            </td>
+            <td class="text-truncate" [title]="unit.description">
+              {{ unit.description.length > 200 ? (unit.description | slice:0:200) + '...' : unit.description }}
+            </td>
+            <td>
+              <button class="btn btn-link p-0 me-2" (click)="viewTasks.emit(unit.unitId)">
+                <i class="bi bi-list-task"></i> Ver tareas/quiz
+              </button>
+              <button class="btn btn-link p-0" (click)="editUnit.emit(unit.unitId)">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUnits.length === 0">
+            <td colspan="3" class="text-center text-muted" style="height:200px; vertical-align:middle;">
+              No se encontraron unidades.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

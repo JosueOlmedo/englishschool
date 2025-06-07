@@ -1,4 +1,4 @@
-import { Task } from "./task"
+import { Task } from "./taskMingo"
 
 export interface GroupTask {
   description: string

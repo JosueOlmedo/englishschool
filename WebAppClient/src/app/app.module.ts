@@ -35,6 +35,8 @@ import { MessageModule } from 'primeng/message';
 import { MessagesModule } from 'primeng/messages';
 import { NgxSpinnerModule } from "ngx-spinner";
 import { PasswordModule } from 'primeng/password';
+import { MatTabsModule } from '@angular/material/tabs';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { AppComponent } from './app.component';
 
@@ -49,13 +51,30 @@ import { AuthInterceptor } from './helpers/auth.interceptor';
 import { UseradminComponent } from './views/useradmin/useradmin.component';
 import { MylearningComponent } from './views/mylearning/mylearning.component';
 import { StudentsComponent } from './views/students/students.component';
+import { BooksComponent } from './views/books/books.component';
 import { catalogDetService } from './shared/catalogDet.service';
+import { BooksListComponent } from './views/books/books-list/books-list.component';
+import { UnitsListComponent } from './views/books/units-list/units-list.component';
+import { TasksListComponent } from './views/books/tasks-list/tasks-list.component';
 registerLocaleData(localEs,'es')
 
 @NgModule({ declarations: [
-        AppComponent, LoginComponent, UseradminComponent, MylearningComponent, StudentsComponent
+        AppComponent
+        , LoginComponent
+        , UseradminComponent
+        , MylearningComponent
+        , StudentsComponent
+        , BooksComponent
+        , BooksListComponent
+        , UnitsListComponent
+        , TasksListComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent, BooksComponent
+        , BooksListComponent
+        , UnitsListComponent
+        , TasksListComponent]
+    , imports: [
+        BrowserModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -90,7 +109,10 @@ registerLocaleData(localEs,'es')
                 useFactory: HttpLoaderFactory,
                 deps: [HttpClient]
             }
-        })], providers: [
+        }),
+        MatTabsModule,
+        NgbModule,
+    ], providers: [
         { provide: LOCALE_ID, useValue: 'es' },
         {
             provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true

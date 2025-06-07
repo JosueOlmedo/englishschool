@@ -1,0 +1,39 @@
+<div class="books-container">
+  <div class="vertical-tabs">
+    <nav>
+      <button
+        *ngFor="let tab of tabs; let i = index"
+        [class.active]="selectedTabIndex === i"
+        [disabled]="isTabDisabled(i)"
+      >
+        {{ tab.label }}
+      </button>
+    </nav>
+    <div class="tab-content-wrapper" [class.page-flip]="isTransitioning">
+      <div class="tab-overlay" *ngIf="isTransitioning"></div>
+      <ng-container [ngSwitch]="selectedTabIndex">
+        <div *ngSwitchCase="0">
+          <app-books-list
+            [books]="books"
+            (goToUnits)="onGoToUnits($event)"
+          ></app-books-list>
+        </div>
+        <div *ngSwitchCase="1">
+          <app-units-list
+            [book]="selectedBook"
+            [units]="unitsOfSelectedBook"
+            (viewTasks)="onViewTasks($event)"
+            (back)="onBackToBooks()"
+          ></app-units-list>
+        </div>
+        <div *ngSwitchCase="2">
+          <app-tasks-list
+            [unit]="selectedUnit"
+            [tasks]="tasksOfSelectedUnit"
+            (back)="onBackToUnits()"
+          ></app-tasks-list>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

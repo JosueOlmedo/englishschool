@@ -1,0 +1,173 @@
+<div class="container-fluid p-0">
+  <!-- Muestra el título de la unidad -->
+  <h4 *ngIf="unit">Tareas y Quiz de: {{ unit.name }}</h4>
+
+  <div class="row mb-2">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+      <button class="btn btn-secondary mb-3" (click)="back.emit()">
+        <i class="bi bi-arrow-left"></i> Volver a unidades
+      </button>
+      <button class="btn btn-primary w-100 w-md-auto" (click)="openAddTaskModal()">
+        <i class="bi bi-plus"></i> Agregar tarea
+      </button>
+    </div>
+  </div>
+  <div class="row align-items-center mb-3 g-2">
+    <div class="col-12 col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Buscar tarea..."
+        [(ngModel)]="searchTerm"
+        (input)="filterTasks()"
+      />
+    </div>
+  </div>
+  <div class="table-responsive" style="min-height:320px; max-height:60vh; overflow-x:auto;">
+    <div style="min-width:700px; max-width:100%; height:320px; overflow-y:auto;">
+      <table class="table table-striped table-bordered align-middle mb-0" style="table-layout:fixed; width:100%;">
+        <thead class="table-light">
+          <tr>
+            <th style="width:20%;">Nombre</th>
+            <th style="width:40%;">Descripción</th>
+            <th style="width:10%;">Quiz</th>
+            <th style="width:30%;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let task of filteredTasks">
+            <td class="text-truncate" [title]="task.name">
+              {{ task.name.length > 100 ? (task.name | slice:0:100) + '...' : task.name }}
+            </td>
+            <td class="text-truncate" [title]="task.description">
+              {{ task.description.length > 200 ? (task.description | slice:0:200) + '...' : task.description }}
+            </td>
+            <td>
+              <span *ngIf="task.isQuiz" class="badge bg-success">Quiz</span>
+              <span *ngIf="!task.isQuiz" class="badge bg-secondary">Tarea</span>
+            </td>
+            <td>
+              <button *ngIf="task.isQuiz" class="btn btn-link p-0 me-2" (click)="onViewQuiz(task)">
+                <i class="bi bi-eye"></i> Ver Quiz
+              </button>
+              <button class="btn btn-link p-0" (click)="editTask.emit(task.taskId)">
+                <i class="bi bi-pencil"></i> Editar
+              </button>
+            </td>
+          </tr>
+          <tr *ngIf="filteredTasks.length === 0">
+            <td colspan="3" class="text-center text-muted" style="height:200px; vertical-align:middle;">
+              No se encontraron tareas.
+            </td>
+          </tr>
+          <ng-container *ngIf="filteredTasks.length < minRows">
+            <tr *ngFor="let dummy of dummyRows">
+              <td>&nbsp;</td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Ejemplo de modal para mostrar el quiz -->
+  <div *ngIf="selectedQuizTask" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.4);">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Quiz: {{ selectedQuizTask.name }}</h5>
+          <button type="button" class="btn-close" (click)="selectedQuizTask = null"></button>
+        </div>
+        <div class="modal-body">
+          <div [innerHTML]="getQuizHtml(selectedQuizTask)"></div>
+          <!-- En tu modal de edición/creación de quiz -->
+          <!--<form-builder-drag-and-drop
+            [formJson]="selectedQuizTask?.quizContentJson"
+            (formJsonChange)="selectedQuizTask.quizContentJson = $event"
+          ></form-builder-drag-and-drop>
+        -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para mostrar tareas y quiz de la unidad -->
+<div *ngIf="showTasksModal" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.4); z-index: 2000;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tareas y Quiz disponibles</h5>
+        <button type="button" class="btn-close" (click)="closeTasksModal()"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group">
+          <li *ngFor="let task of selectedUnitTasks" class="list-group-item d-flex justify-content-between align-items-center">
+            <span>
+              <strong>{{ task.name }}</strong>
+              <span *ngIf="task.isQuiz" class="badge bg-success ms-2">Quiz</span>
+              <span *ngIf="!task.isQuiz" class="badge bg-secondary ms-2">Tarea</span>
+              <div class="small text-muted">{{ task.description }}</div>
+            </span>
+            <button *ngIf="task.isQuiz" class="btn btn-outline-primary btn-sm" (click)="onViewQuiz(task)">
+              Ver Quiz
+            </button>
+          </li>
+        </ul>
+        <div *ngIf="selectedUnitTasks.length === 0" class="text-center text-muted mt-3">
+          No hay tareas ni quiz disponibles para esta unidad.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showAddTaskModal" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.4); z-index: 2000;">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Agregar tarea</h5>
+        <button type="button" class="btn-close" (click)="closeAddTaskModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="mb-3">
+            <label class="form-label">Nombre</label>
+            <input type="text" class="form-control" [(ngModel)]="newTask.name" name="name">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" [(ngModel)]="newTask.description" name="description"></textarea>
+          </div>
+          <div class="form-check form-switch mb-3">
+            <input class="form-check-input" type="checkbox" id="isQuizSwitch" [(ngModel)]="newTask.isQuiz" name="isQuiz">
+            <label class="form-check-label" for="isQuizSwitch">¿Es Quiz?</label>
+          </div>
+        </form>
+        <button class="btn btn-primary" (click)="onSaveTask()">Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="showQuizBuilderModal" class="modal fade show d-block" tabindex="-1" style="background:rgba(0,0,0,0.4); z-index: 2000;">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Constructor de Quiz</h5>
+        <button type="button" class="btn-close" (click)="closeQuizBuilderModal()"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Aquí va el contenido del constructor de quiz 
+        <form-builder-drag-and-drop
+          [formJson]="selectedQuizTask?.quizContentJson"
+          (formJsonChange)="selectedQuizTask.quizContentJson = $event"
+        ></form-builder-drag-and-drop>
+      -->
+      </div>
+    </div>
+  </div>
+</div>

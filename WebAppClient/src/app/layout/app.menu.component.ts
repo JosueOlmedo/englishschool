@@ -14,6 +14,7 @@ export class AppMenuComponent implements AfterContentChecked {
         { label: 'Users', srcIconSvg: 'assets/img/users-solid.svg', srcIconSvgActive: 'assets/img/users-solid.svg', icon: '', routerLink: ['/users'], active: false, main: false },
         { label: 'My Learning', srcIconSvg: 'assets/img/chalkboard-user-solid.svg', srcIconSvgActive: 'assets/img/chalkboard-user-solid.svg',  icon: '', routerLink: ['/mylearning'], active: false, main: true },
         { label: 'Students', srcIconSvg: 'assets/img/book-open-reader-solid.svg', srcIconSvgActive: 'assets/img/book-open-reader-solid.svg', icon: '', routerLink: ['/students'], active: false, main: false },
+        { label: 'Books', srcIconSvg: 'assets/img/book-open-reader-solid.svg', srcIconSvgActive: 'assets/img/book-open-reader-solid.svg', icon: '', routerLink: ['/books'], active: false, main: false },
         //{ label: 'Timeline', srcIconSvg: 'assets/img/timeline.svg', srcIconSvgActive: 'assets/img/timeline-active.svg', icon: 'fa-solid fa-timeline', routerLink: ['/timeline'], active: false, main: false },
         //{ label: 'Usuarios', srcIconSvg: 'assets/img/users-solid.svg', srcIconSvgActive: 'assets/img/users-solid.svg', routerLink: ['/useradmin'], active: false, main: false }
     ];

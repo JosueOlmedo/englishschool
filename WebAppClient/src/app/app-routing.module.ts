@@ -6,6 +6,7 @@ import { MylearningComponent } from './views/mylearning/mylearning.component';
 import { AuthGuard } from './helpers/auth.guard';
 import { StudentsComponent } from './views/students/students.component';
 import { UseradminComponent } from './views/useradmin/useradmin.component';
+import { BooksComponent } from './views/books/books.component';
 
 @NgModule({
     imports: [
@@ -17,7 +18,8 @@ import { UseradminComponent } from './views/useradmin/useradmin.component';
                     { path: '', component: MylearningComponent },
                     { path: 'mylearning', component: MylearningComponent},
                     { path: 'students', component: StudentsComponent },
-                    { path: 'users', component: UseradminComponent }
+                    { path: 'users', component: UseradminComponent },
+                    { path: 'books', component: BooksComponent }
                 ]   
             },
             {
