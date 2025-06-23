@@ -1,39 +1,69 @@
-<div class="books-container">
-  <div class="vertical-tabs">
-    <nav>
+<div class="books-fullscreen">
+  <div class="books-container">
+    <div class="books-header">
       <button
-        *ngFor="let tab of tabs; let i = index"
-        [class.active]="selectedTabIndex === i"
-        [disabled]="isTabDisabled(i)"
+        class="icon-switch"
+        (click)="isVerticalTabs = !isVerticalTabs"
+        [attr.aria-label]="isVerticalTabs ? 'Cambiar a horizontal' : 'Cambiar a vertical'"
+        [attr.title]="isVerticalTabs ? 'Cambiar a pestañas horizontales' : 'Cambiar a pestañas verticales'"
       >
-        {{ tab.label }}
+        <span *ngIf="isVerticalTabs">
+          <!-- Icono vertical -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="4" height="16" rx="2" fill="#1976d2"/>
+            <rect x="10" y="4" width="4" height="16" rx="2" fill="#90caf9"/>
+            <rect x="16" y="4" width="4" height="16" rx="2" fill="#1976d2"/>
+          </svg>
+        </span>
+        <span *ngIf="!isVerticalTabs">
+          <!-- Icono horizontal -->
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+            <rect x="4" y="4" width="16" height="4" rx="2" fill="#1976d2"/>
+            <rect x="4" y="10" width="16" height="4" rx="2" fill="#90caf9"/>
+            <rect x="4" y="16" width="16" height="4" rx="2" fill="#1976d2"/>
+          </svg>
+        </span>
       </button>
-    </nav>
-    <div class="tab-content-wrapper" [class.page-flip]="isTransitioning">
-      <div class="tab-overlay" *ngIf="isTransitioning"></div>
-      <ng-container [ngSwitch]="selectedTabIndex">
-        <div *ngSwitchCase="0">
-          <app-books-list
-            [books]="books"
-            (goToUnits)="onGoToUnits($event)"
-          ></app-books-list>
-        </div>
-        <div *ngSwitchCase="1">
-          <app-units-list
-            [book]="selectedBook"
-            [units]="unitsOfSelectedBook"
-            (viewTasks)="onViewTasks($event)"
-            (back)="onBackToBooks()"
-          ></app-units-list>
-        </div>
-        <div *ngSwitchCase="2">
-          <app-tasks-list
-            [unit]="selectedUnit"
-            [tasks]="tasksOfSelectedUnit"
-            (back)="onBackToUnits()"
-          ></app-tasks-list>
-        </div>
-      </ng-container>
+    </div>
+    <div
+      class="tabs-wrapper"
+      [ngClass]="{ 'vertical-tabs': isVerticalTabs, 'horizontal-tabs': !isVerticalTabs }"
+    >
+      <nav>
+        <button
+          *ngFor="let tab of tabs; let i = index"
+          [class.active]="selectedTabIndex === i"
+          [disabled]="isTabDisabled(i)"
+        >
+          {{ tab.label }}
+        </button>
+      </nav>
+      <div class="tab-content-wrapper" [class.page-flip]="isTransitioning">
+        <div class="tab-overlay" *ngIf="isTransitioning"></div>
+        <ng-container [ngSwitch]="selectedTabIndex">
+          <div *ngSwitchCase="0">
+            <app-books-list
+              [books]="books"
+              (goToUnits)="onGoToUnits($event)"
+            ></app-books-list>
+          </div>
+          <div *ngSwitchCase="1">
+            <app-units-list
+              [book]="selectedBook"
+              [units]="unitsOfSelectedBook"
+              (viewTasks)="onViewTasks($event)"
+              (back)="onBackToBooks()"
+            ></app-units-list>
+          </div>
+          <div *ngSwitchCase="2">
+            <app-tasks-list
+              [unit]="selectedUnit"
+              [tasks]="tasksOfSelectedUnit"
+              (back)="onBackToUnits()"
+            ></app-tasks-list>
+          </div>
+        </ng-container>
+      </div>
     </div>
   </div>
 </div>

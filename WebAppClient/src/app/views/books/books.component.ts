@@ -33,6 +33,7 @@ export class BooksComponent implements OnInit {
   searchTerm = ''; // Nuevo: guarda el filtro de libros
   unitSearchTerm = ''; // Nuevo: guarda el filtro de unidades
   taskSearchTerm = ''; // Nuevo: guarda el filtro de tareas
+  isVerticalTabs = true; // Nuevo: controla la orientación de las tabs
 
   constructor(private snackBar: MatSnackBar) {}
 
